@@ -62,4 +62,28 @@ class LabelController extends Controller
 
         return $labels;
     }
+
+    public function listByname($name){
+      //$id = DB::select(DB::raw("select label.id from label where name = $name"));
+      //return $id;
+    }
+
+
+    public function updateLabels($old_labels, $question_id)
+    {
+      
+      DB::table('question_label')->where('question_id', $question_id)->delete();
+      
+      error_log($old_labels);
+      error_log("hey");
+      foreach ($old_labels as $l){
+        //$label_id = $this->listByname($l);
+        error_log($l);
+      }
+      error_log("hey2");
+      
+
+
+    }
+
 }

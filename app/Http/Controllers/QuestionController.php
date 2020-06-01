@@ -208,6 +208,10 @@ class QuestionController extends Controller
 
       $question->title = $request->input('title');
       $question->description = $request->input('description');
+
+      $labels = $request->input('labelNames');
+      $this->labelController->updateLabels($labels, $question->id);
+      
       
       $info = [$question->title, $question->description];
 

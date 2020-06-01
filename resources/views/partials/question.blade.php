@@ -1,4 +1,5 @@
 <div>
+
     <!-- Modal -->
     <div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -48,8 +49,24 @@
 </div>
 <div>
     <p id="question_description">{{ $question->description }}</p>
+    {{-- 
+    @if(Auth::check())
+        @if(Auth::user()->getUserCurrentRole() == 'administrator' || Auth::user()->getUserCurrentRole() == 'moderator')
+            <a class="badge badge-dark badge-pill question_label" id="add_label_admin"> Add label + </a>
+        @endif
+    @endif
+    --}}
     @foreach ($labels as $label)
-    <a class="badge badge-dark badge-pill" id="question_label">{{ $label->name }}</a>
+    {{-- 
+        @if(Auth::check())
+            @if(Auth::user()->getUserCurrentRole() == 'administrator' || Auth::user()->getUserCurrentRole() == 'moderator')
+                <a class="badge badge-dark badge-pill question_label">{{ $label->name }} x </a>
+            @else
+                <a class="badge badge-dark badge-pill question_label">{{ $label->name }}</a>
+            @endif
+        @else
+        --}}
+            <a class="badge badge-dark badge-pill question_label">{{ $label->name }}</a>
     @endforeach
     <div class=icons>
 

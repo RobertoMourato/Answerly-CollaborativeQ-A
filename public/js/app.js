@@ -150,6 +150,10 @@ function addEventListeners() {
     if (labelAdder != null)
         labelAdder.addEventListener('click', sendAddLabelRequest);
 
+    let labelAdderAdmin = document.getElementById('add_label_admin');
+    if (labelAdderAdmin != null)
+        labelAdderAdmin.addEventListener('click', sendAddLabelAdminRequest);
+    
     // following questions
 
     let followQuestions = document.querySelectorAll('.followH');
@@ -378,6 +382,7 @@ function questionEditedHandler() {
     // Edit Question
     let new_title = editTitle(info);
     let new_description = editDescription(info);
+    let new_labels = editLabels(info);
 
     let div_title = document.querySelector("div#question-div h1");
     let div_description = document.querySelector("div#question-div #question_description");
@@ -471,6 +476,17 @@ function commentUpdatedHandler() {
 function labelStartedHandler() {
     let new_content = startLabel();
     let plus = document.getElementById('add_label');
+    plus.outerHTML = new_content.innerHTML;
+
+    // Focus
+    plus.focus();
+
+    addEventListeners();
+}
+
+function labelAdminStartedHandler(){
+    let new_content = startLabelAdmin();
+    let plus = document.getElementById('add_label_admin');
     plus.outerHTML = new_content.innerHTML;
 
     // Focus
@@ -647,9 +663,17 @@ function sendEditQuestionRequest() {
     let id = this.closest('div#question-div').getAttribute('data-id');
     let title = document.querySelector("div#question-div h1").textContent;
     let description = document.querySelector("div#question-div #question_description").textContent;
+    let labels = document.querySelectorAll(".question_label");
+    let labelNames = [];
+
+    for(i = 0; i < labels.length; i++){
+        labelNames.push(labels[i].innerHTML);
+    }
+
+    console.log(labelNames);
 
     if (title != '' && description != '')
-        sendAjaxRequest('put', '/api/question/' + id, { title: title, description: description }, questionEditedHandler);
+        sendAjaxRequest('put', '/api/question/' + id, { title: title, description: description, labelNames: labelNames }, questionEditedHandler);
 }
 
 function sendEditAnswerRequest() {
@@ -746,6 +770,10 @@ function sendAddLabelRequest() {
     sendAjaxRequest('put', '/api/label/', null, labelStartedHandler);
 }
 
+function sendAddLabelAdminRequest(){
+    sendAjaxRequest('put', '/api/label/', null, labelAdminStartedHandler);
+}
+
 function sendCreateLabelsRequest(question_index) {
     let forms = document.querySelectorAll('.label_form');
 
@@ -822,6 +850,15 @@ function editDescription(info) {
 
     return new_question;
 
+}
+
+function editLabels(info){
+    let new_question = document.createElement('question');
+    new_question.classList.add('question');
+    new_question.setAttribute('data-id', 0);
+    //new_question.innerHTML = `<input id="question_description" class="form-control" type="text" value="${info[]}">`;
+
+    return new_question;
 }
 
 function editAnswerContent(info) {
@@ -1050,6 +1087,14 @@ function startLabel() {
     let start_label = document.createElement('div');
     start_label.innerHTML = `<input class="badge-dark badge-pill form-control col-sm-4 label_form" type="text" placeholder="#">
                              <a class="badge badge-dark badge-pill" id="add_label">+</a>`;
+
+    return start_label;
+}
+
+function startLabelAdmin() {
+    let start_label = document.createElement('div');
+    start_label.innerHTML = `<input class="badge-dark badge-pill form-control col-sm-4 label_form" type="text" placeholder="#">
+                             <a class="badge badge-dark badge-pill" id="add_label_admin">+</a>`;
 
     return start_label;
 }
